@@ -97,54 +97,56 @@ rl.on('line', function(line) {
 		var words = bagOfWords(question.body);
 		var count = wordCount(words);
 		question.wordCounts = count;
-		putItem(question);
+		// putItem(question);
 
 	}
 	lineCount++;
 });
 rl.on('close', function() {});
 
+
+
 // var str1 = "&lt;p&gt;If your institution has a subscription to Journal Citation Reports (JCR), you can check it there. Try this URL:&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;a href=&quot;http://isiknowledge.com/jcr&quot;&gt;http://isiknowledge.com/jcr&lt;/a&gt;&lt;/p&gt;&#xA;";
 // str1 = getTextFromHtml(str1);
 // console.log(str1)
 
-var AWS = require('aws-sdk');
-AWS.config.loadFromPath('./aws_config.json');
-var db = new AWS.DynamoDB();
+// var AWS = require('aws-sdk');
+// AWS.config.loadFromPath('./aws_config.json');
+// var db = new AWS.DynamoDB();
 
-function putItem(question) {
+// function putItem(question) {
 
-	var item = { // required
-		"question_id": {
-			"S": question.id
-		}
-	};
+// 	var item = { // required
+// 		"question_id": {
+// 			"S": question.id
+// 		}
+// 	};
 
-	if (question.tags.length > 0) {
-		item["ke_tags"] = {
-			SS: question.tags
-		}
-	}
+// 	if (question.tags.length > 0) {
+// 		item["ke_tags"] = {
+// 			SS: question.tags
+// 		}
+// 	}
 
-	var wordCounts = question.wordCounts;
+// 	var wordCounts = question.wordCounts;
 
-	for (var word in wordCounts) {
-		var count = wordCounts[word];
-		item[word] = {
-			N: count.toString()
-		}
-	}
+// 	for (var word in wordCounts) {
+// 		var count = wordCounts[word];
+// 		item[word] = {
+// 			N: count.toString()
+// 		}
+// 	}
 
-	var params = {
-		Item: item,
-		TableName: 'questions', // required
+// 	var params = {
+// 		Item: item,
+// 		TableName: 'questions', // required
 
-	};
-	db.putItem(params, function(err, data) {
-		if (err) {
-			console.log(item);
-			console.log(err, err.stack);
-		} // an error occurred
-		else console.log(data); // successful response
-	});
-}
+// 	};
+// 	db.putItem(params, function(err, data) {
+// 		if (err) {
+// 			console.log(item);
+// 			console.log(err, err.stack);
+// 		} // an error occurred
+// 		else console.log(data); // successful response
+// 	});
+// }

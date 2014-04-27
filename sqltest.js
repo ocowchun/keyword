@@ -18,8 +18,22 @@
 // db.close();
 
 var tag = require('./lib/model/tag');
+var tag_word = require('./lib/model/tag_word');
 var Q = require('Q');
 // console.log(tag)
+
+var word1 = {
+	content: 'fuck',
+	tag_name: 'Ipsum8',
+	count: 3
+}, word2 = {
+		content: 'fuck',
+		tag_name: 'Ipsum2',
+		count: 2
+	},
+	words = [word1, word2];
+
+tag_word.update(words);
 
 
 function find(tag_name) {
@@ -50,12 +64,12 @@ var log = function(result) {
 // });
 //research promise.js
 
-var tag1 = {
-	name: 'Ipsum8',
-	count: 3
-}, tag2 = {
-		name: 'Ipsum2',
-		count: 2
-	},
-	tags = [tag1, tag2];
-tag.update(tags);
+// var tag1 = {
+// 	name: 'Ipsum8',
+// 	count: 3
+// }, tag2 = {
+// 		name: 'Ipsum2',
+// 		count: 2
+// 	},
+// 	tags = [tag1, tag2];
+// tag.update(tags);

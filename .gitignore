@@ -3,6 +3,7 @@ errors
 db
 aws_config.json
 config
+dabase.json
 ### Node ###
 # Logs
 logs

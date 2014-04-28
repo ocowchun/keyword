@@ -2,6 +2,7 @@ academia.stackexchange.com
 errors
 db
 aws_config.json
+config
 ### Node ###
 # Logs
 logs

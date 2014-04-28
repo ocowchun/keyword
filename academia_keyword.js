@@ -101,18 +101,20 @@ rl.on('line', function(line) {
 		var words = bagOfWords(question.body);
 		var count = wordCount(words);
 		question.wordCounts = count;
-		questions.push(question);
-		// if (lineCount > 3 && lineCount < 7) {
-		// 	questions.push(question);
-		// }
+		// questions.push(question);
+		var start = 2,
+			end = start + 100;
+		if (lineCount > start && lineCount < end) {
+			questions.push(question);
+
+		}
 	}
-
-
 	lineCount++;
 	// console.log(lineCount);
 });
 rl.on('close', function() {
 	console.log(questions.length);
+	console.log("updateQuestions start")
 	updateQuestions(questions);
 });
 
@@ -120,8 +122,10 @@ rl.on('close', function() {
 function updateQuestions(questions) {
 	if (questions.length > 0) {
 		var question = questions.pop();
-		updateItem(question).done(
+		console.log("update id:" + question.id);
+		updateItem(question).then(
 			function() {
+				console.log("fuck");
 				console.log(questions.length);
 				updateQuestions(questions);
 			});
@@ -129,16 +133,21 @@ function updateQuestions(questions) {
 }
 
 function updateItem(question) {
+	console.log("updateItem start");
 	var deferred = Q.defer();
 	updateTags(question.tags).then(function() {
-		updateAllTagWords(question.wordCounts, question.tags);
-	}).done(function() {
-		deferred.resolve();
-	});
+		console.log("updateAllTagWords start");
+		updateAllTagWords(question.wordCounts, question.tags).then(function() {
+			console.log("updateItem done");
+			deferred.resolve();
+		});
+	})
 	return deferred.promise;
 }
 
 function updateTags(tagStrs) {
+	console.log("updateTags start");
+	var deferred = Q.defer();
 	var tags = [];
 	_.each(tagStrs, function(tag) {
 		tags.push({
@@ -148,19 +157,29 @@ function updateTags(tagStrs) {
 
 	});
 
+	if (tags.length > 0) {
+		tagManager.update(tags).done(function() {
+			console.log("updateTags done");
+			deferred.resolve();
+		});
+	} else {
+		console.log("updateTags done");
+		deferred.resolve();
+	}
 
-	return tagManager.update(tags);
+	return deferred.promise;
 }
 
-function updateAllTagWords(wordCounts, tagNames) {
-	var deferred = Q.defer();
+function updateAllTagWords(wordCounts, tagNames, deferred) {
+	deferred = deferred || Q.defer();
 	if (tagNames.length > 0) {
 		var tagName = tagNames.pop();
 		updateOneTagWords(wordCounts, tagName).done(
 			function() {
-				updateAllTagWords(wordCounts, tagNames);
+				updateAllTagWords(wordCounts, tagNames, deferred);
 			});
 	} else {
+		console.log("updateAllTagWords done")
 		deferred.resolve();
 	}
 	return deferred.promise;

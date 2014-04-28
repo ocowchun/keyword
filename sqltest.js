@@ -33,7 +33,7 @@ var word1 = {
 	},
 	words = [word1, word2];
 
-tag_word.update(words);
+// tag_word.update(words);
 
 
 function find(tag_name) {
@@ -57,6 +57,13 @@ var find2 = function(result) {
 var log = function(result) {
 	console.log(result)
 }
+
+var c = ['123', '456'];
+c.pop();
+c.pop();
+c.pop();
+
+console.log(c);
 
 // find('Ipsum7').then(find2).done(log);
 // Q.all([find('Ipsum7'),find('Ipsum2'),find('Ipsum3')]).done(function(){

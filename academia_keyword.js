@@ -1,5 +1,8 @@
 var _ = require('underscore');
 var body = "&lt;p&gt;As from title. What kind of visa class do I have to apply for, in order to work as an academic in Japan ? &lt;/p&gt;&#xA;";
+var tagManager = require('./lib/model/tag');
+var tagWordManager = require('./lib/model/tag_word');
+var Q = require('Q');
 
 function getTextFromHtml(body) {
 	var validHTMLTags = /^(?:a|abbr|acronym|address|applet|area|article|aside|audio|b|base|basefont|bdi|bdo|bgsound|big|blink|blockquote|body|br|button|canvas|caption|center|cite|code|col|colgroup|data|datalist|dd|del|details|dfn|dir|div|dl|dt|em|embed|fieldset|figcaption|figure|font|footer|form|frame|frameset|h1|h2|h3|h4|h5|h6|head|header|hgroup|hr|html|i|iframe|img|input|ins|isindex|kbd|keygen|label|legend|li|link|listing|main|map|mark|marquee|menu|menuitem|meta|meter|nav|nobr|noframes|noscript|object|ol|optgroup|option|output|p|param|plaintext|pre|progress|q|rp|rt|ruby|s|samp|script|section|select|small|source|spacer|span|strike|strong|style|sub|summary|sup|table|tbody|td|textarea|tfoot|th|thead|time|title|tr|track|tt|u|ul|var|video|wbr|xmp)$/i;
@@ -89,22 +92,95 @@ var rl = readline.createInterface(instream, outstream);
 
 var fileContent = "";
 var lineCount = 0;
-
+var questions = [];
 
 rl.on('line', function(line) {
+
 	if (lineCount > 2) {
 		var question = parse(line);
 		var words = bagOfWords(question.body);
 		var count = wordCount(words);
 		question.wordCounts = count;
-		// putItem(question);
-
+		questions.push(question);
+		// if (lineCount > 3 && lineCount < 7) {
+		// 	questions.push(question);
+		// }
 	}
+
+
 	lineCount++;
+	// console.log(lineCount);
 });
-rl.on('close', function() {});
+rl.on('close', function() {
+	console.log(questions.length);
+	updateQuestions(questions);
+});
 
 
+function updateQuestions(questions) {
+	if (questions.length > 0) {
+		var question = questions.pop();
+		updateItem(question).done(
+			function() {
+				console.log(question.length);
+				updateItem(question);
+			});
+	}
+}
+
+function updateItem(question) {
+	var deferred = Q.defer();
+	updateTags(question.tags).then(function() {
+		updateAllTagWords(question.wordCounts, question.tags);
+	}).done(function() {
+		deferred.resolve();
+	});
+	return deferred.promise;
+}
+
+function updateTags(tagStrs) {
+	var tags = [];
+	_.each(tagStrs, function(tag) {
+		tags.push({
+			name: tag,
+			count: 1
+		});
+
+	});
+
+
+	return tagManager.update(tags);
+}
+
+function updateAllTagWords(wordCounts, tagNames) {
+	var deferred = Q.defer();
+	if (tagNames.length > 0) {
+		var tagName = tagNames.pop();
+		updateOneTagWords(wordCounts, tagName).done(
+			function() {
+				updateAllTagWords(wordCounts, tagNames);
+			});
+	} else {
+		deferred.resolve();
+	}
+	return deferred.promise;
+}
+
+function updateOneTagWords(wordCounts, tagName) {
+	// var deferred = Q.defer();
+	var tagWords = [];
+	for (var word in wordCounts) {
+		var count = wordCounts[word];
+		var tagWord = {
+			content: word,
+			tag_name: tagName,
+			count: count
+		};
+		tagWords.push(tagWord);
+	}
+	return tagWordManager.update(tagWords);
+
+}
 
 // var str1 = "&lt;p&gt;If your institution has a subscription to Journal Citation Reports (JCR), you can check it there. Try this URL:&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;a href=&quot;http://isiknowledge.com/jcr&quot;&gt;http://isiknowledge.com/jcr&lt;/a&gt;&lt;/p&gt;&#xA;";
 // str1 = getTextFromHtml(str1);

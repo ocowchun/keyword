@@ -122,8 +122,8 @@ function updateQuestions(questions) {
 		var question = questions.pop();
 		updateItem(question).done(
 			function() {
-				console.log(question.length);
-				updateItem(question);
+				console.log(questions.length);
+				updateQuestions(questions);
 			});
 	}
 }

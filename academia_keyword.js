@@ -104,11 +104,7 @@ rl.on('line', function(line) {
 		// questions.push(question);
 		var start = 2,
 			end = start + 100;
-		if (lineCount == 4) {
-			console.log(question)
-		}
-
-		// questions.push(question);
+		questions.push(question);
 
 	}
 	lineCount++;
@@ -118,7 +114,45 @@ rl.on('close', function() {
 	console.log(questions.length);
 	console.log("updateQuestions start")
 	// updateQuestions(questions);
+	// updateTagWordCounts(questions);
 });
+
+
+function updateTagWordCounts(questions) {
+	if (questions.length > 0) {
+		var question = questions.pop();
+		console.log("update id:" + question.id);
+		updateItemWordCount(question).then(
+			function() {
+				console.log("fuck");
+				updateTagWordCounts(questions);
+			});
+	}
+}
+
+function updateItemWordCount(question) {
+	console.log("updateItemWordCount start");
+	var deferred = Q.defer();
+	var count = getTotalWordCount(question.wordCounts);
+	if (question.tags.length == 0) {
+		deferred.resolve();
+	} else {
+		tagManager.setManyWordCount(question.tags, count).done(function() {
+			console.log("updateItemWordCount done");
+			deferred.resolve();
+		});
+	}
+	return deferred.promise;
+}
+
+function getTotalWordCount(wordCounts) {
+	var sum = 0;
+	for (var word in wordCounts) {
+		var count = wordCounts[word];
+		sum += count;
+	}
+	return sum;
+}
 
 
 function updateQuestions(questions) {

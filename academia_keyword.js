@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var body = "&lt;p&gt;As from title. What kind of visa class do I have to apply for, in order to work as an academic in Japan ? &lt;/p&gt;&#xA;";
-var tagManager = require('./lib/mysql_model/tag');
-var tagWordManager = require('./lib/mysql_model/tag_word');
+var tagManager = require('./lib/redis_model/tag');
+var tagWordManager = require('./lib/redis_model/tag_word');
 var Q = require('Q');
 
 function getTextFromHtml(body) {
@@ -104,10 +104,12 @@ rl.on('line', function(line) {
 		// questions.push(question);
 		var start = 2,
 			end = start + 100;
-		if (lineCount==3) {
-			questions.push(question);
-
+		if (lineCount == 4) {
+			console.log(question)
 		}
+
+		// questions.push(question);
+
 	}
 	lineCount++;
 	// console.log(lineCount);
@@ -115,7 +117,7 @@ rl.on('line', function(line) {
 rl.on('close', function() {
 	console.log(questions.length);
 	console.log("updateQuestions start")
-	updateQuestions(questions);
+	// updateQuestions(questions);
 });
 
 

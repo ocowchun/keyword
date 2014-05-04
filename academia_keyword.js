@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var body = "&lt;p&gt;As from title. What kind of visa class do I have to apply for, in order to work as an academic in Japan ? &lt;/p&gt;&#xA;";
-var tagManager = require('./lib/model/tag');
-var tagWordManager = require('./lib/model/tag_word');
+var tagManager = require('./lib/mysql_model/tag');
+var tagWordManager = require('./lib/mysql_model/tag_word');
 var Q = require('Q');
 
 function getTextFromHtml(body) {
@@ -104,7 +104,7 @@ rl.on('line', function(line) {
 		// questions.push(question);
 		var start = 2,
 			end = start + 100;
-		if (lineCount > start && lineCount < end) {
+		if (lineCount==3) {
 			questions.push(question);
 
 		}

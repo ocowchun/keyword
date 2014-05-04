@@ -30,16 +30,28 @@
     //     client.quit();
     // });
 
-    var tagManager = require('./lib/redis_model/tag');
-    var tag1 = {
-        name: 'good3',
+    // var tagManager = require('./lib/redis_model/tag');
+    // var tag1 = {
+    //     name: 'good3',
+    //     count: 3
+    // }, tag2 = {
+    //         name: 'bad2',
+    //         count: 2
+    //     },
+    //     tags = [tag1, tag2];
+    // tagManager.update(tags);
+
+    var tagWordManager = require('./lib/redis_model/tag_word');
+    var word1 = {
+        content: 'fuck',
+        tag_name: 'Ipsum8',
         count: 3
-    }, tag2 = {
-            name: 'bad2',
+    }, word2 = {
+            content: 'fuck',
+            tag_name: 'you',
             count: 2
         },
-        tags = [tag1, tag2];
-    tagManager.update(tags);
-
+        words = [word1, word2];
+    tagWordManager.update(words);
 
     // console.log("1"*1+1);

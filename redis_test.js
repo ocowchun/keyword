@@ -1,5 +1,14 @@
-    // var redis = require("redis"),
-    //     client = redis.createClient(6379, "192.168.2.8");
+    var redis = require("redis"),
+        client = redis.createClient(6379, "192.168.0.183");
+
+    var keys = ["tagword_data_identify", "tagword_data_annotated","fuck"];
+
+    client.mget(keys, function(err, result) {
+        client.quit();
+        console.log("result:");
+        console.log(result);
+
+    })
 
     // // if you'd like to select database 3, instead of 0 (default), call
     // // client.select(3, function() { /* ... */ });
@@ -41,17 +50,17 @@
     //     tags = [tag1, tag2];
     // tagManager.update(tags);
 
-    var tagWordManager = require('./lib/redis_model/tag_word');
-    var word1 = {
-        content: 'fuck',
-        tag_name: 'Ipsum8',
-        count: 3
-    }, word2 = {
-            content: 'fuck',
-            tag_name: 'you',
-            count: 2
-        },
-        words = [word1, word2];
-    tagWordManager.update(words);
+    // var tagWordManager = require('./lib/redis_model/tag_word');
+    // var word1 = {
+    //     content: 'fuck',
+    //     tag_name: 'Ipsum8',
+    //     count: 3
+    // }, word2 = {
+    //         content: 'fuck',
+    //         tag_name: 'you',
+    //         count: 2
+    //     },
+    //     words = [word1, word2];
+    // tagWordManager.update(words);
 
     // console.log("1"*1+1);

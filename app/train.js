@@ -67,6 +67,9 @@ function bagOfWords(text) {
 	words = _.filter(words, function(word) {
 		return word != '';
 	});
+	words = _.map(words, function(word) {
+		return word.toLowerCase();
+	})
 	return words;
 }
 
@@ -96,12 +99,13 @@ var questions = [];
 
 rl.on('line', function(line) {
 
-	if (lineCount > 2) {
+	if (lineCount == 3) {
 		var question = parse(line);
 		var words = bagOfWords(question.body);
 		var count = wordCount(words);
 		question.wordCounts = count;
-		// questions.push(question);
+		console.log(question)
+		questions.push(question);
 		// questions.push(question);
 
 	}
@@ -110,9 +114,8 @@ rl.on('line', function(line) {
 });
 rl.on('close', function() {
 	console.log(questions.length);
+	updateTagWordCounts(questions)
 	console.log("updateQuestions start")
-	// updateQuestions(questions);
-	// updateTagWordCounts(questions);
 });
 
 

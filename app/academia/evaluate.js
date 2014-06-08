@@ -100,6 +100,7 @@ var fileContent = "";
 var lineCount = 0;
 var questions = [];
 readFile();
+
 function readFile() {
 
 
@@ -107,7 +108,7 @@ function readFile() {
 
 	rl.on('line', function(line) {
 
-		if (lineCount == 3) {
+		if (lineCount >= 3&&lineCount<=500) {
 			var question = parse(line);
 			var words = bagOfWords(question.body);
 			var count = wordCount(words);
@@ -115,7 +116,7 @@ function readFile() {
 
 			var wordAry = exportWordToArray(count);
 			evaluate(question)
-			console.log(question)
+			// console.log(question)
 
 			// questions.push(question);
 
@@ -124,6 +125,7 @@ function readFile() {
 	});
 
 	rl.on('close', function() {
+
 		console.log(questions.length);
 		console.log("updateQuestions start")
 	});
@@ -153,6 +155,7 @@ function classifier(words) {
 // tags: ['journals', 'bibliometrics', 'metrics'],
 function evaluate(question) {
 	var wordAry = exportWordToArray(question.wordCounts);
+	// console.log(wordAry)
 	var expectTags = question.tags;
 	classifier(wordAry).done(function(classifierTags) {
 		calculateScore(classifierTags, expectTags);
@@ -160,10 +163,50 @@ function evaluate(question) {
 
 }
 
+// 總分
+var total_score = 0,
+	totalQuestion = 0,
+	goodQuestion = 0;
+
+//計算前10明內的有幾個是對的,一個對的加一分 然後除預期tag數
 function calculateScore(classifierTags, expectTags) {
+	totalQuestion++;
+	classifierScore = 0;
+	if (expectTags.length > 0) {
+		_.each(expectTags, function(tag) {
+			var score = findIndex(classifierTags.slice(0, 10), tag) + 1;
+			if (score != 11) {
+				classifierScore += 1
+			}
+		});
+		classifierScore = classifierScore / expectTags.length //normalizeScore(classifierScore, expectTags);
+
+	}
+	if (classifierScore > 0) {
+		goodQuestion++;
+	}
+
+	console.log("final score");
+
+	// console.log(classifierTags);
+	console.log(classifierScore);
+	total_score += classifierScore;
+	console.log("goodQuestion")
+	console.log(goodQuestion);
+	console.log("total_score")
+	console.log(total_score);
+	console.log("totalQuestion")
+	console.log(totalQuestion);
+	console.log("avg score");
+	console.log(total_score / totalQuestion);
+	return classifierScore;
+}
+
+function calculateScore2(classifierTags, expectTags) {
 	classifierScore = 0;
 	_.each(expectTags, function(tag) {
 		var score = findIndex(classifierTags, tag) + 1;
+
 		console.log(score);
 		classifierScore += score;
 	});
@@ -197,120 +240,7 @@ function normalizeScore(score, tags) {
 		return score / base;
 	} else {
 
-		return 10;
+		return 11;
 	}
 
 }
-
-// var tags = [
-// 		{
-// 			tag: 'chemistry',
-// 			probaility: -48.69373813581992
-// 		}, {
-// 			tag: 'new-zealand',
-// 			probaility: -58.840464342326335
-// 		}, {
-// 			tag: 'break-of-study',
-// 			probaility: -60.74517637259666
-// 		}, {
-// 			tag: 'recruiting',
-// 			probaility: -61.11405868133195
-// 		}, {
-// 			tag: 'chinese-education',
-// 			probaility: -61.53549039207497
-// 		}, {
-// 			tag: 'foo',
-// 			probaility: -61.575977589210055
-// 		}, {
-// 			tag: 'job-search',
-// 			probaility: -63.06843059917587
-// 		}, {
-// 			tag: 'abroad',
-// 			probaility: -63.74033806408628
-// 		}, {
-// 			tag: 'scientometrics',
-// 			probaility: -64.26492351651167
-// 		}, {
-// 			tag: 'introduction',
-// 			probaility: -64.52020845118432
-// 		}, {
-// 			tag: 'publicity',
-// 			probaility: -64.66298184384777
-// 		}, {
-// 			tag: 'pubmed',
-// 			probaility: -64.72174483226988
-// 		}, {
-// 			tag: 'cv',
-// 			probaility: -65.08315462646631
-// 		}, {
-// 			tag: 'metrics',
-// 			probaility: -65.13497556377038
-// 		}, {
-// 			tag: 'proceedings',
-// 			probaility: -65.50495470654192
-// 		}, {
-// 			tag: 'career-path',
-// 			probaility: -65.65645207122353
-// 		}, {
-// 			tag: 'systematic',
-// 			probaility: -66.001689837659
-// 		}, {
-// 			tag: 'meta',
-// 			probaility: -66.001689837659
-// 		}, {
-// 			tag: 'research-group',
-// 			probaility: -66.11517301946547
-// 		}, {
-// 			tag: 'fellowships',
-// 			probaility: -66.36812430292778
-// 		}, {
-// 			tag: 'research',
-// 			probaility: -66.38213765583434
-// 		}, {
-// 			tag: 'program-committee',
-// 			probaility: -66.39152831360838
-// 		}, {
-// 			tag: 'immaterial-property',
-// 			probaility: -66.57094571135745
-// 		}, {
-// 			tag: 'gradebook',
-// 			probaility: -66.68432188390561
-// 		}, {
-// 			tag: 'part-time',
-// 			probaility: -66.76506839221996
-// 		}, {
-// 			tag: 'dating',
-// 			probaility: -66.8505305735766
-// 		}, {
-// 			tag: 'postdocs',
-// 			probaility: -67.20820843770447
-// 		}, {
-// 			tag: 'job',
-// 			probaility: -67.41281434720793
-// 		}, {
-// 			tag: 'privacy',
-// 			probaility: -67.47480578361154
-// 		}, {
-// 			tag: 'transcript-of-records',
-// 			probaility: -67.65664719723343
-// 		}, {
-// 			tag: 'distance-learning',
-// 			probaility: -67.69934125886999
-// 		}, {
-// 			tag: 'united-states',
-// 			probaility: -67.75217707595765
-// 		}, {
-// 			tag: 'university',
-// 			probaility: -67.76784756128876
-// 		}, {
-// 			tag: 'survey',
-// 			probaility: -67.87393429951015
-// 		}, {
-// 			tag: 'phd',
-// 			probaility: -67.95871085265267
-// 		}];
-
-
-
-// var s = calculateScore(tags, ['phd', 'job-search', 'chemistry']);
-// console.log(s)

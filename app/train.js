@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var body = "&lt;p&gt;As from title. What kind of visa class do I have to apply for, in order to work as an academic in Japan ? &lt;/p&gt;&#xA;";
-var tagManager = require('./lib/redis_model/tag');
-var tagWordManager = require('./lib/redis_model/tag_word');
+var tagManager = require('../lib/redis_model/tag');
+var tagWordManager = require('../lib/redis_model/tag_word');
 var Q = require('Q');
 
 function getTextFromHtml(body) {
@@ -83,7 +83,7 @@ var fs = require('fs');
 var readline = require('readline');
 var stream = require('stream');
 
-var csvFileName = "academia.stackexchange.com/Posts.xml";
+var csvFileName = "../academia.stackexchange.com/Posts.xml";
 
 var instream = fs.createReadStream(csvFileName);
 var outstream = new stream;
@@ -102,9 +102,7 @@ rl.on('line', function(line) {
 		var count = wordCount(words);
 		question.wordCounts = count;
 		// questions.push(question);
-		var start = 2,
-			end = start + 100;
-		questions.push(question);
+		// questions.push(question);
 
 	}
 	lineCount++;
@@ -236,48 +234,3 @@ function updateOneTagWords(wordCounts, tagName) {
 	return tagWordManager.update(tagWords);
 
 }
-
-// var str1 = "&lt;p&gt;If your institution has a subscription to Journal Citation Reports (JCR), you can check it there. Try this URL:&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;a href=&quot;http://isiknowledge.com/jcr&quot;&gt;http://isiknowledge.com/jcr&lt;/a&gt;&lt;/p&gt;&#xA;";
-// str1 = getTextFromHtml(str1);
-// console.log(str1)
-
-// var AWS = require('aws-sdk');
-// AWS.config.loadFromPath('./aws_config.json');
-// var db = new AWS.DynamoDB();
-
-// function putItem(question) {
-
-// 	var item = { // required
-// 		"question_id": {
-// 			"S": question.id
-// 		}
-// 	};
-
-// 	if (question.tags.length > 0) {
-// 		item["ke_tags"] = {
-// 			SS: question.tags
-// 		}
-// 	}
-
-// 	var wordCounts = question.wordCounts;
-
-// 	for (var word in wordCounts) {
-// 		var count = wordCounts[word];
-// 		item[word] = {
-// 			N: count.toString()
-// 		}
-// 	}
-
-// 	var params = {
-// 		Item: item,
-// 		TableName: 'questions', // required
-
-// 	};
-// 	db.putItem(params, function(err, data) {
-// 		if (err) {
-// 			console.log(item);
-// 			console.log(err, err.stack);
-// 		} // an error occurred
-// 		else console.log(data); // successful response
-// 	});
-// }

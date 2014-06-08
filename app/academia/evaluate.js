@@ -94,35 +94,40 @@ var csvFileName = "../../academia.stackexchange.com/Posts.xml";
 
 var instream = fs.createReadStream(csvFileName);
 var outstream = new stream;
-// var rl = readline.createInterface(instream, outstream);
 
 
 var fileContent = "";
 var lineCount = 0;
 var questions = [];
+readFile();
+function readFile() {
 
-// rl.on('line', function(line) {
 
-// 	if (lineCount == 3) {
-// 		var question = parse(line);
-// 		var words = bagOfWords(question.body);
-// 		var count = wordCount(words);
-// 		question.wordCounts = count;
+	var rl = readline.createInterface(instream, outstream);
 
-// 		var wordAry = exportWordToArray(count);
-// evaluate(question)
-// 		console.log(question)
+	rl.on('line', function(line) {
 
-// 		// questions.push(question);
+		if (lineCount == 3) {
+			var question = parse(line);
+			var words = bagOfWords(question.body);
+			var count = wordCount(words);
+			question.wordCounts = count;
 
-// 	}
-// 	lineCount++;
-// });
+			var wordAry = exportWordToArray(count);
+			evaluate(question)
+			console.log(question)
 
-// rl.on('close', function() {
-// 	console.log(questions.length);
-// 	console.log("updateQuestions start")
-// });
+			// questions.push(question);
+
+		}
+		lineCount++;
+	});
+
+	rl.on('close', function() {
+		console.log(questions.length);
+		console.log("updateQuestions start")
+	});
+}
 
 function exportWordToArray(wordCounts) {
 	var words = [];
@@ -158,7 +163,7 @@ function evaluate(question) {
 function calculateScore(classifierTags, expectTags) {
 	classifierScore = 0;
 	_.each(expectTags, function(tag) {
-		var score = findIndex(classifierTags, tag)+1;
+		var score = findIndex(classifierTags, tag) + 1;
 		console.log(score);
 		classifierScore += score;
 	});
@@ -170,22 +175,22 @@ function calculateScore(classifierTags, expectTags) {
 	return classifierScore;
 }
 
-	function findIndex(tags, targetTag) {
-			for (var i = 0, max = tags.length; i < max; i++) {
-				var tag = tags[i];
-				if (tag.tag == targetTag) {
-					return i;
-				}
-			}
-			return tags.length;
+function findIndex(tags, targetTag) {
+	for (var i = 0, max = tags.length; i < max; i++) {
+		var tag = tags[i];
+		if (tag.tag == targetTag) {
+			return i;
 		}
+	}
+	return tags.length;
+}
 // 'phd', 'job-search', 'chemistry' 
 
 function normalizeScore(score, tags) {
 	var base = 0;
 	if (tags.length > 0) {
 		_(tags.length).times(function(n) {
-			base += (n+1);
+			base += (n + 1);
 		});
 		console.log("base")
 		console.log(base)
@@ -305,9 +310,7 @@ function normalizeScore(score, tags) {
 // 			probaility: -67.95871085265267
 // 		}];
 
-	
 
 
-
-		// var s = calculateScore(tags, ['phd', 'job-search', 'chemistry']);
-		// console.log(s)
+// var s = calculateScore(tags, ['phd', 'job-search', 'chemistry']);
+// console.log(s)

@@ -26,7 +26,7 @@ function parse(row) {
 	question.id = getId(row);
 	question.body = getBody(row);
 	question.tags = getTags(row);
-
+	question.title = getTitle(row);
 	return question;
 }
 
@@ -37,6 +37,14 @@ function getId(row) {
 	var id = row.substring(idStart, idEnd);
 	return id;
 
+}
+
+function getTitle(row) {
+	var bodyStart = row.indexOf('Title="') + 7;
+	var bodyEnd = row.indexOf('"', bodyStart);
+	var body = row.substring(bodyStart, bodyEnd);
+	body = getTextFromHtml(body);
+	return body;
 }
 
 function getBody(row) {
@@ -102,10 +110,10 @@ rl.on('line', function(line) {
 	if (lineCount == 3) {
 		var question = parse(line);
 		var words = bagOfWords(question.body);
+		var titleWords = bagOfWords(question.title);
 		var count = wordCount(words);
 		question.wordCounts = count;
-		console.log(question)
-		questions.push(question);
+		console.log(titleWords)
 		// questions.push(question);
 
 	}
@@ -114,7 +122,7 @@ rl.on('line', function(line) {
 });
 rl.on('close', function() {
 	console.log(questions.length);
-	updateTagWordCounts(questions)
+	// updateQuestions(questions)
 	console.log("updateQuestions start")
 });
 

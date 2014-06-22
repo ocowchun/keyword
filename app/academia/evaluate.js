@@ -1,4 +1,4 @@
-var naiveBayes = require('../../lib/naiveBayes');
+var naiveBayes = require('../../lib/naiveBayer2');
 var _ = require('underscore');
 var fs = require('fs');
 var readline = require('readline');
@@ -108,7 +108,7 @@ function readFile() {
 
 	rl.on('line', function(line) {
 
-		if (lineCount >= 4 && lineCount <= 600) {
+		if (lineCount >= 4 &lineCount<=40) {
 			var question = parse(line);
 			var words = bagOfWords(question.body);
 			var count = wordCount(words);

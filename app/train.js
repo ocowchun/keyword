@@ -3,7 +3,7 @@ var body = "&lt;p&gt;As from title. What kind of visa class do I have to apply f
 var tagManager = require('../lib/redis_model/tag');
 var tagWordManager = require('../lib/redis_model/tag_word');
 var tagTitleManager = require('../lib/redis_model/tag_title');
-
+var docManager = require('../lib/models/doc');
 var Q = require('Q');
 
 function getTextFromHtml(body) {
@@ -117,7 +117,6 @@ rl.on('line', function(line) {
 		var titlWordCount = wordCount(titleWords);
 		question.wordCounts = count;
 		question.titleWordCounts = titlWordCount;
-		// console.log(titleWords)
 		// console.log(question)
 		questions.push(question);
 
@@ -161,7 +160,7 @@ function getTotalWordCount(wordCounts) {
 
 //把問題的資料丟到db
 function updateItem(question) {
-	console.log("updateItem start");
+	console.log("updateItem start:" + question.id);
 	var deferred = Q.defer();
 	updateTags(question.tags).then(function() {
 		updateTitleAndWord(question).done(function() {
@@ -196,11 +195,31 @@ function updateTags(tagStrs) {
 	return deferred.promise;
 }
 
+function updateWordDoc(wordCounts) {
+	var words = [];
+	for (word in wordCounts) {
+		words.push(word);
+	}
+	return docManager.incrDocs(words);
+}
 
 function updateTitleAndWord(question) {
 
-	var deferred = Q.defer();
+	// var deferred = Q.defer();
+	// updateTagTitleAndWord(question).then(function() {
+	// 	updateWordDoc(question.wordCounts).done(function() {
+	// 		deferred.resolve();
 
+	// 	});
+	// });
+
+	// return deferred.promise;
+	updateWordDoc(question.wordCounts)
+	return updateTagTitleAndWord(question);
+}
+
+function updateTagTitleAndWord(question) {
+	var deferred = Q.defer();
 	updateTagTitleWords(question.titleWordCounts, question.tags).done(function() {
 		updateTagWords(question.wordCounts, question.tags).then(function() {
 			deferred.resolve();

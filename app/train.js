@@ -4,6 +4,8 @@ var tagManager = require('../lib/redis_model/tag');
 var tagWordManager = require('../lib/redis_model/tag_word');
 var tagTitleManager = require('../lib/redis_model/tag_title');
 var docManager = require('../lib/models/doc');
+var docStorage = require('../lib/elastic_search/doc');
+
 var Q = require('Q');
 
 function getTextFromHtml(body) {
@@ -109,7 +111,7 @@ var questions = [];
 
 rl.on('line', function(line) {
 
-	if (lineCount >= 3) {
+	if (lineCount >=3) {
 		var question = parse(line);
 		var words = bagOfWords(question.body);
 		var titleWords = bagOfWords(question.title);
@@ -118,6 +120,7 @@ rl.on('line', function(line) {
 		question.wordCounts = count;
 		question.titleWordCounts = titlWordCount;
 		// console.log(question)
+		// docStorage.create(question)
 		questions.push(question);
 
 	}
@@ -127,9 +130,25 @@ rl.on('line', function(line) {
 rl.on('close', function() {
 	console.log(questions.length);
 	console.log("updateQuestions start")
-	updateQuestions(questions)
+	// updateQuestions(questions)
+	// storeQuestions(questions)
+
 });
 
+
+
+function storeQuestions(questions) {
+	if (questions.length > 0) {
+		var question = questions.pop();
+		console.log("store questione: " + question.id);
+		docStorage.create(question).then(
+			function() {
+				storeQuestions(questions);
+			});
+	} else {
+		console.log("store questions done!");
+	}
+}
 
 
 function updateQuestions(questions) {

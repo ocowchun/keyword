@@ -25,7 +25,7 @@ var questions = [];
 exports.excute = function(updateQuestions) {
 	rl.on('line', function(line) {
 
-		if (lineCount == 3) {
+		if (lineCount >= 3&& lineCount<=1000) {
 			var question = textUtil.parse(line);
 			var words = textUtil.bagOfWords(question.body);
 			var titleWords = textUtil.bagOfWords(question.title);
@@ -33,30 +33,16 @@ exports.excute = function(updateQuestions) {
 			var titlWordCount = textUtil.wordCount(titleWords);
 			question.wordCounts = count;
 			question.titleWordCounts = titlWordCount;
-			// console.log(question)
+			questions.push(question);
 
 		}
 		lineCount++;
 		// console.log(lineCount);
 	});
 	rl.on('close', function() {
-		console.log("questions length: "+questions.length);
+		console.log("questions length: " + questions.length);
 		console.log("updateQuestions start")
 		updateQuestions(questions);
 
 	});
 };
-
-
-// function updateQuestions(questions) {
-// 	if (questions.length > 0) {
-// 		var question = questions.pop();
-// 		console.log("store questione: " + question.id);
-// 		docStorage.create(question).then(
-// 			function() {
-// 				storeQuestions(questions);
-// 			});
-// 	} else {
-// 		console.log("store questions done!");
-// 	}
-// }

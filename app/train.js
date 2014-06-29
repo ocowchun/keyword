@@ -130,7 +130,7 @@ rl.on('line', function(line) {
 rl.on('close', function() {
 	console.log(questions.length);
 	console.log("updateQuestions start")
-	// updateQuestions(questions)
+	updateQuestions(questions)
 	// storeQuestions(questions)
 
 });

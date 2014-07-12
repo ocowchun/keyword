@@ -3,7 +3,7 @@
 var readData = require('./readData');
 var clusterManager = require('../lib/knn');
 var fs = require('fs');
-var clusterInfo = require('../datas/academia/cluster');
+// var clusterInfo = require('../datas/academia/cluster');
 readData.excute(updateQuestions);
 
 function updateQuestions(questions) {

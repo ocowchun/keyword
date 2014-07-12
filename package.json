@@ -1,0 +1,33 @@
+{
+  "name": "keyword",
+  "version": "0.0.0",
+  "description": "",
+  "main": "academia_keyword.js",
+  "dependencies": {
+    "aws-sdk": "~2.0.0-rc13",
+    "db-migrate": "~0.6.4",
+    "csvtojson": "~0.3.1",
+    "elasticsearch": "~2.2.0",
+    "mysql": "~2.2.0",
+    "migrate": "~0.1.4",
+    "q": "~1.0.1",
+    "redis": "~0.10.3",
+    "sqlite3": "~2.2.3",
+    "string": "~1.8.0",
+    "underscore": "~1.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ocowchun/keyword.git"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/ocowchun/keyword/issues"
+  },
+  "homepage": "https://github.com/ocowchun/keyword"
+}

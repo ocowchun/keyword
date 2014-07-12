@@ -16,8 +16,8 @@ function updateQuestions(questions) {
 
 		// console.log(n.tags)
 		
-		// writeToFile(n.neighbors, "cluster.js");
-		// writeToFile(n.tags, "tags.js");
+		writeToFile(n.neighbors, "cluster.js");
+		writeToFile(n.tags, "tags.js");
 
 	});
 }

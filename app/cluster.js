@@ -14,7 +14,8 @@ function updateQuestions(questions) {
 		var diff = ((t2 - t1) / (1000))
 		console.log(diff+" seconds");
 
-		console.log(n.tags)
+		// console.log(n.tags)
+		
 		// writeToFile(n.neighbors, "cluster.js");
 		// writeToFile(n.tags, "tags.js");
 

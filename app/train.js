@@ -98,7 +98,10 @@ var fs = require('fs');
 var readline = require('readline');
 var stream = require('stream');
 
-var csvFileName = "../academia.stackexchange.com/Posts.xml";
+// var csvFileName = "../academia.stackexchange.com/Posts.xml";
+var csvFileName = "../datas/stackexchange/android.stackexchange/Posts.xml";
+
+
 
 var instream = fs.createReadStream(csvFileName);
 var outstream = new stream;
@@ -130,7 +133,9 @@ rl.on('line', function(line) {
 rl.on('close', function() {
 	console.log(questions.length);
 	console.log("updateQuestions start")
-	updateQuestions(questions)
+	//store tf idf
+	// updateQuestions(questions)
+
 	// storeQuestions(questions)
 
 });

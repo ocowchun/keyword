@@ -1,3 +1,5 @@
+// train cluster
+
 var readData = require('./readData');
 var clusterManager = require('../lib/knn');
 var fs = require('fs');
@@ -13,7 +15,11 @@ function updateQuestions(questions) {
 	});
 }
 
-// clusterManager.loadCluster(clusterInfo.data)
+
+
+// clusterManager.loadCluster(clusterInfo.data);
+// clusterManager.meanOfIntraCluster();
+
 // goo();
 // function goo() {
 // 	question = {

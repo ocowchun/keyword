@@ -11,21 +11,25 @@ var fs = require('fs');
 var readline = require('readline');
 var stream = require('stream');
 
-var csvFileName = "../academia.stackexchange.com/Posts.xml";
+// var csvFileName = "../academia.stackexchange.com/Posts.xml";
+var csvFileName = "../datas/stackexchange/android.stackexchange/Posts.xml";
 
-var instream = fs.createReadStream(csvFileName);
-var outstream = new stream;
-var rl = readline.createInterface(instream, outstream);
 
 
 var fileContent = "";
 var lineCount = 0;
 var questions = [];
 
-exports.excute = function(updateQuestions) {
+exports.excute = function(updateQuestions, fileName) {
+	fileName = fileName || csvFileName;
+	var instream = fs.createReadStream(fileName);
+
+	var outstream = new stream;
+	var rl = readline.createInterface(instream, outstream);
+
 	rl.on('line', function(line) {
 
-		if (lineCount >= 3&& lineCount<=1000) {
+		if (lineCount >= 3 ) {
 			var question = textUtil.parse(line);
 			var words = textUtil.bagOfWords(question.body);
 			var titleWords = textUtil.bagOfWords(question.title);

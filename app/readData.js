@@ -20,16 +20,16 @@ var fileContent = "";
 var lineCount = 0;
 var questions = [];
 
-exports.excute = function(updateQuestions, fileName) {
+exports.excute = function(updateQuestions, fileName, only_tag) {
 	fileName = fileName || csvFileName;
 	var instream = fs.createReadStream(fileName);
-
+	only_tag = only_tag || true;
 	var outstream = new stream;
 	var rl = readline.createInterface(instream, outstream);
 
 	rl.on('line', function(line) {
 
-		if (lineCount >= 3 && lineCount<1000) {
+		if (lineCount >= 3 && lineCount < 5000) {
 			var question = textUtil.parse(line);
 			var words = textUtil.bagOfWords(question.body);
 			var titleWords = textUtil.bagOfWords(question.title);
@@ -37,8 +37,15 @@ exports.excute = function(updateQuestions, fileName) {
 			var titlWordCount = textUtil.wordCount(titleWords);
 			question.wordCounts = count;
 			question.titleWordCounts = titlWordCount;
-			questions.push(question);
+			if (only_tag) {
+				if (question.tags.length > 0) {
+					questions.push(question);
 
+				}
+			} else {
+				questions.push(question);
+
+			}
 		}
 		lineCount++;
 		// console.log(lineCount);

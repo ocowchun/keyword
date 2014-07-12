@@ -7,7 +7,13 @@ var fs = require('fs');
 readData.excute(updateQuestions);
 
 function updateQuestions(questions) {
+		var t1 = Date.now();
+
 	clusterManager.kNN(questions).done(function(n) {
+		var t2 = Date.now();
+		var diff = ((t2 - t1) / (1000))
+		console.log(diff+" seconds");
+
 		console.log(n.tags)
 		// writeToFile(n.neighbors, "cluster.js");
 		// writeToFile(n.tags, "tags.js");

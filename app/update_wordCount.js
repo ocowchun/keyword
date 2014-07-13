@@ -1,5 +1,7 @@
 var tagManager = require('../lib/redis_model/tag');
 var tagWordManager = require('../lib/redis_model/tag_word');
+var tagTitleManager = require('../lib/redis_model/tag_title');
+
 
 var Q = require('Q');
 var _ = require("underscore");
@@ -15,7 +17,8 @@ function getTags() {
 
 
 getTags().done(function(tags) {
-	updateAllWordCount(tags);
+	//update!!
+	// updateAllWordCount(tags);
 });
 
 
@@ -39,17 +42,16 @@ function updateAllWordCount(tags, deferred) {
 function updateWordCount(tag) {
 	var deferred = Q.defer();
 
-	tagWordManager.getTagWords(tag).done(function(words) {
+	tagTitleManager.getTagWords(tag).done(function(words) {
 		var count = sum(words);
 		console.log(count);
-		tagManager.setTagWordCount(tag, count).done(function() {
+		tagManager.setTagTitleWordCount(tag, count).done(function() {
 			deferred.resolve();
 		});
 
 	})
 	return deferred.promise;
 }
-
 
 //setTagWordCount
 function sum(words) {

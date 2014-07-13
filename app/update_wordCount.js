@@ -18,7 +18,7 @@ function getTags() {
 
 getTags().done(function(tags) {
 	//update!!
-	// updateAllWordCount(tags);
+	updateAllWordCount(tags);
 });
 
 

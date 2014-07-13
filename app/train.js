@@ -15,7 +15,7 @@ function processData(questions) {
 	console.log(questions.length);
 	console.log("updateQuestions start")
 	//store tf idf
-	updateQuestions(questions)
+	// updateQuestions(questions)
 
 	// storeQuestions(questions)
 

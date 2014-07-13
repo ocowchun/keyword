@@ -3,7 +3,7 @@ var tagWordManager = require('../lib/redis_model/tag_word');
 var tagTitleManager = require('../lib/redis_model/tag_title');
 
 
-var Q = require('Q');
+var Q = require('q');
 var _ = require("underscore");
 
 function getTags() {

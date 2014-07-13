@@ -42,10 +42,10 @@ function updateAllWordCount(tags, deferred) {
 function updateWordCount(tag) {
 	var deferred = Q.defer();
 
-	tagTitleManager.getTagWords(tag).done(function(words) {
+	tagWordManager.getTagWords(tag).done(function(words) {
 		var count = sum(words);
 		console.log(count);
-		tagManager.setTagTitleWordCount(tag, count).done(function() {
+		tagManager.setTagWordCount(tag, count).done(function() {
 			deferred.resolve();
 		});
 

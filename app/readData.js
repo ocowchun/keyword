@@ -29,7 +29,7 @@ exports.excute = function(updateQuestions, fileName, only_tag) {
 
 	rl.on('line', function(line) {
 
-		if (lineCount >= 3 && lineCount < 300) {
+		if (lineCount >= 3) {
 			var question = textUtil.parse(line);
 			var words = textUtil.bagOfWords(question.body);
 			var titleWords = textUtil.bagOfWords(question.title);

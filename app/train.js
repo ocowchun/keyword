@@ -15,7 +15,7 @@ function processData(questions) {
 	console.log(questions.length);
 	console.log("updateQuestions start")
 	//store tf idf
-	updateQuestions(questions)
+	// updateQuestions(questions)
 
 	// storeQuestions(questions)
 
@@ -135,10 +135,10 @@ function updateTagTitleAndWord(question) {
 }
 
 var updateTagWordService = getStoreService(tagWordManager.findFromTagAndWord, tagManager.setDistinctWord,
-	tagWordManager.setMany);
+	tagWordManager.setMany,tagManager.setTagWordCount);
 
 var updateTagTitleWordService = getStoreService(tagTitleManager.findFromTagAndWord, tagManager.setDistinctTitleWord,
-	tagTitleManager.setMany);
+	tagTitleManager.setMany,tagManager.setTagTitleWordCount);
 
 //更新tagWord,tagDistinctWord
 function updateTagWords(wordCounts, tagNames) {
@@ -159,11 +159,12 @@ function updateTagTitleWords(wordCounts, tagNames) {
 	return deferred.promise;
 }
 
-function getStoreService(findFromTagAndWord, setDistinctWord, setMany) {
+function getStoreService(findFromTagAndWord, setDistinctWord, setMany, setTagWordCount) {
 	var service = {
 		findFromTagAndWord: findFromTagAndWord,
 		setDistinctWord: setDistinctWord,
-		setMany: setMany
+		setMany: setMany,
+		setTagWordCount: setTagWordCount
 	};
 	service.updateTagWords = function(wordCounts, tagNames) {
 
@@ -172,7 +173,10 @@ function getStoreService(findFromTagAndWord, setDistinctWord, setMany) {
 		service.updateDistinctTagWords(_.clone(tagNames), words).done(function() {
 
 			service.updateAllTagWords(wordCounts, _.clone(tagNames)).done(function() {
-				deferred.resolve();
+
+				service.updateAllTagWordCount(wordCounts, _.clone(tagNames)).done(function() {
+					deferred.resolve();
+				});
 			});
 
 		});
@@ -234,6 +238,30 @@ function getStoreService(findFromTagAndWord, setDistinctWord, setMany) {
 		}
 
 		return service.setMany(tagName, wordCounts);
+	}
+
+	//更新tags的總字彙數
+	service.updateAllTagWordCount = function(wordCounts, tagNames, deferred) {
+		deferred = deferred || Q.defer();
+		if (tagNames.length > 0) {
+			var tagName = tagNames.pop();
+			service.updateOneTagWordCount(wordCounts, tagName).done(
+				function() {
+					service.updateAllTagWordCount(wordCounts, tagNames, deferred);
+				});
+		} else {
+			deferred.resolve();
+		}
+		return deferred.promise;
+	}
+
+	//更新tag的總字彙數
+	service.updateOneTagWordCount = function(wordCounts, tagName) {
+		var count = _.reduce(wordCounts, function(memo, num) {
+			return memo + num;
+		}, 0);
+
+		return service.setTagWordCount(tagName, count);
 	}
 
 	return service.updateTagWords;
